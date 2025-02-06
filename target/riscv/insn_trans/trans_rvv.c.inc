@@ -3671,3 +3671,24 @@ GEN_INT_EXT_TRANS(vzext_vf8, 3, 2)
 GEN_INT_EXT_TRANS(vsext_vf2, 1, 3)
 GEN_INT_EXT_TRANS(vsext_vf4, 2, 4)
 GEN_INT_EXT_TRANS(vsext_vf8, 3, 5)
+
+/* Zvabd Extension */
+#define GEN_ABD_CHECK(NAME, CHECK_FN)                 \
+static bool NAME(DisasContext *s, arg_rmrr *a)        \
+{                                                     \
+    return CHECK_FN(s, a) && s->cfg_ptr->ext_zvabd;   \
+}
+GEN_ABD_CHECK(vabd_vv_check, opivv_check)
+GEN_ABD_CHECK(vabd_vx_check, opivx_check)
+GEN_ABD_CHECK(vwabd_vv_check, opivv_widen_check)
+GEN_ABD_CHECK(vwabd_vx_check, opivx_widen_check)
+
+GEN_OPIVV_TRANS(vabd_vv, vabd_vv_check)
+GEN_OPIVX_TRANS(vabd_vx, vabd_vx_check)
+GEN_OPIVV_TRANS(vabdu_vv, vabd_vv_check)
+GEN_OPIVX_TRANS(vabdu_vx, vabd_vx_check)
+
+GEN_OPIVV_WIDEN_TRANS(vwabdacc_vv, vwabd_vv_check)
+GEN_OPIVX_WIDEN_TRANS(vwabdacc_vx, vwabd_vx_check)
+GEN_OPIVV_WIDEN_TRANS(vwabdaccu_vv, vwabd_vv_check)
+GEN_OPIVX_WIDEN_TRANS(vwabdaccu_vx, vwabd_vx_check)
