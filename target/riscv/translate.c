@@ -804,6 +804,11 @@ static int ex_rvc_shiftri(DisasContext *ctx, int imm)
     return imm;
 }
 
+static int ex_bimm(DisasContext *ctx, int imm)
+{
+    return imm == 0 ? -1 : imm;
+}
+
 /* Include the auto-generated decoder for 32 bit insn */
 #include "decode-insn32.c.inc"
 
@@ -1156,6 +1161,7 @@ static uint32_t opcode_at(DisasContextBase *dcbase, target_ulong pc)
 #include "decode-xthead.c.inc"
 #include "insn_trans/trans_xthead.c.inc"
 #include "insn_trans/trans_xventanacondops.c.inc"
+#include "insn_trans/trans_rvzibimm.c.inc"
 
 /* Include the auto-generated decoder for 16 bit insn */
 #include "decode-insn16.c.inc"
