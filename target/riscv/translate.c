@@ -1207,6 +1207,7 @@ static uint32_t opcode_at(DisasContextBase *dcbase, target_ulong pc)
 #include "decode-XVentanaCondOps.c.inc"
 
 #include "insn_trans/trans_rvzilx.c.inc"
+#include "insn_trans/trans_rvzisx.c.inc"
 
 /* The specification allows for longer insns, but not supported by qemu. */
 #define MAX_INSN_LEN  4
