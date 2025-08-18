@@ -984,6 +984,30 @@ typedef enum {
     rv_op_ssamoswap_d = 953,
     rv_op_c_sspush = 954,
     rv_op_c_sspopchk = 955,
+    rv_op_lxb       = 956,
+    rv_op_lxb_uw    = 957,
+    rv_op_lxbu      = 958,
+    rv_op_lxbu_uw   = 959,
+    rv_op_lxh       = 960,
+    rv_op_lxh_uw    = 961,
+    rv_op_lxhu      = 962,
+    rv_op_lxhu_uw   = 963,
+    rv_op_lxw       = 964,
+    rv_op_lxw_uw    = 965,
+    rv_op_lxwu      = 966,
+    rv_op_lxwu_uw   = 967,
+    rv_op_lxd       = 968,
+    rv_op_lxd_uw    = 969,
+    rv_op_lxh_s     = 970,
+    rv_op_lxh_s_uw  = 971,
+    rv_op_lxhu_s    = 972,
+    rv_op_lxhu_s_uw = 973,
+    rv_op_lxw_s     = 974,
+    rv_op_lxw_s_uw  = 975,
+    rv_op_lxwu_s    = 976,
+    rv_op_lxwu_s_uw = 977,
+    rv_op_lxd_s     = 978,
+    rv_op_lxd_s_uw  = 979,
 } rv_op;
 
 /* register names */
@@ -2254,6 +2278,30 @@ const rv_opcode_data rvi_opcode_data[] = {
       rv_op_sspush, 0 },
     { "c.sspopchk", rv_codec_cmop_ss, rv_fmt_rs1, NULL, rv_op_sspopchk,
       rv_op_sspopchk, 0 },
+    { "lxb", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxb.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxbu", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxbu.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxh", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxh.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxhu", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxhu.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxw.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxwu", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxwu.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxd", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxd.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxh_s", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxh_s.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxhu_s", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxhu_s.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxw_s", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxw_s.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxwu_s", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxwu_s.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxd_s", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lxd_s.uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
 };
 
 /* CSR names */
@@ -2783,7 +2831,40 @@ static void decode_inst_opcode(rv_decode *dec, rv_isa isa)
             case 4: op = rv_op_lbu; break;
             case 5: op = rv_op_lhu; break;
             case 6: op = rv_op_lwu; break;
-            case 7: op = rv_op_ldu; break;
+            // case 7: op = rv_op_ldu; break;
+            case 7:
+                switch ((inst >> 25) & 0b111) {
+                case 0b010:
+                    switch ((inst >> 30) & 0b11) {
+                        case 0b00: op = inst & (1 << 29) ? rv_op_lxbu : rv_op_lxb; break;
+                        case 0b01: op = inst & (1 << 29) ? rv_op_lxhu : rv_op_lxh; break;
+                        case 0b10: op = inst & (1 << 29) ? rv_op_lxwu : rv_op_lxw; break;
+                        case 0b11: op = rv_op_lxd; break;
+                    }
+                    break;
+                case 0b011:
+                    switch ((inst >> 30) & 0b11) {
+                        case 0b00: op = inst & (1 << 29) ? rv_op_lxbu_uw : rv_op_lxb_uw; break;
+                        case 0b01: op = inst & (1 << 29) ? rv_op_lxhu_uw : rv_op_lxh_uw; break;
+                        case 0b10: op = inst & (1 << 29) ? rv_op_lxwu_uw : rv_op_lxw_uw; break;
+                        case 0b11: op = rv_op_lxd_uw; break;
+                    }
+                    break;
+                case 0b100:
+                    switch ((inst >> 30) & 0b11) {
+                        case 0b01: op = inst & (1 << 29) ? rv_op_lxhu_s : rv_op_lxh_s; break;
+                        case 0b10: op = inst & (1 << 29) ? rv_op_lxwu_s : rv_op_lxw_s; break;
+                        case 0b11: op = rv_op_lxd_s; break;
+                    }
+                    break;
+                case 0b101:
+                    switch ((inst >> 30) & 0b11) {
+                        case 0b01: op = inst & (1 << 29) ? rv_op_lxhu_s_uw : rv_op_lxh_s_uw; break;
+                        case 0b10: op = inst & (1 << 29) ? rv_op_lxwu_s_uw : rv_op_lxw_s_uw; break;
+                        case 0b11: op = rv_op_lxd_s_uw; break;
+                    }
+                    break;
+                }
             }
             break;
         case 1:
