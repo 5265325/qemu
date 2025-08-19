@@ -1033,6 +1033,13 @@ typedef enum {
     rv_op_shib      = 1002,
     rv_op_swib      = 1003,
     rv_op_sdib      = 1004,
+    rv_op_lbia      = 1005,
+    rv_op_lbuia     = 1006,
+    rv_op_lhia      = 1007,
+    rv_op_lhuia     = 1008,
+    rv_op_lwia      = 1009,
+    rv_op_lwuia     = 1010,
+    rv_op_ldia      = 1011,
 } rv_op;
 
 /* register names */
@@ -2352,6 +2359,13 @@ const rv_opcode_data rvi_opcode_data[] = {
     { "shib", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
     { "swib", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
     { "sdib", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
+    { "lbia", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lbuia", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lhia ", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lhuia", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lwia ", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lwuia", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "ldia ", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
 };
 
 /* CSR names */
@@ -2890,6 +2904,14 @@ static void decode_inst_opcode(rv_decode *dec, rv_isa isa)
                         case 0b01: op = inst & (1 << 29) ? rv_op_lhuib : rv_op_lhib; break;
                         case 0b10: op = inst & (1 << 29) ? rv_op_lwuib : rv_op_lwib; break;
                         case 0b11: op = rv_op_ldib; break;
+                    }
+                    break;
+                case 0b001:
+                    switch ((inst >> 30) & 0b11) {
+                        case 0b00: op = inst & (1 << 29) ? rv_op_lbuia : rv_op_lbia; break;
+                        case 0b01: op = inst & (1 << 29) ? rv_op_lhuia : rv_op_lhia; break;
+                        case 0b10: op = inst & (1 << 29) ? rv_op_lwuia : rv_op_lwia; break;
+                        case 0b11: op = rv_op_ldia; break;
                     }
                     break;
                 case 0b010:
