@@ -1040,6 +1040,10 @@ typedef enum {
     rv_op_lwia      = 1009,
     rv_op_lwuia     = 1010,
     rv_op_ldia      = 1011,
+    rv_op_sbia      = 1012,
+    rv_op_shia      = 1013,
+    rv_op_swia      = 1014,
+    rv_op_sdia      = 1015,
 } rv_op;
 
 /* register names */
@@ -2366,6 +2370,10 @@ const rv_opcode_data rvi_opcode_data[] = {
     { "lwia ", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
     { "lwuia", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
     { "ldia ", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "sbia", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
+    { "shia", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
+    { "swia", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
+    { "sdia", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
 };
 
 /* CSR names */
@@ -3164,6 +3172,14 @@ static void decode_inst_opcode(rv_decode *dec, rv_isa isa)
                         case 0b01: op = rv_op_shib; break;
                         case 0b10: op = rv_op_swib; break;
                         case 0b11: op = rv_op_sdib; break;
+                    }
+                    break;
+                case 0b001:
+                    switch ((inst >> 30) & 0b11) {
+                        case 0b00: op = rv_op_sbia; break;
+                        case 0b01: op = rv_op_shia; break;
+                        case 0b10: op = rv_op_swia; break;
+                        case 0b11: op = rv_op_sdia; break;
                     }
                     break;
                 case 0b010:
