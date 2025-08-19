@@ -124,6 +124,7 @@ const RISCVIsaExtData isa_edata_arr[] = {
     ISA_EXT_DATA_ENTRY(zimop, PRIV_VERSION_1_13_0, ext_zimop),
     ISA_EXT_DATA_ENTRY(zilx, PRIV_VERSION_1_13_0, ext_zilx),
     ISA_EXT_DATA_ENTRY(zisx, PRIV_VERSION_1_13_0, ext_zisx),
+    ISA_EXT_DATA_ENTRY(zilxib, PRIV_VERSION_1_13_0, ext_zilxib),
     ISA_EXT_DATA_ENTRY(zmmul, PRIV_VERSION_1_12_0, ext_zmmul),
     ISA_EXT_DATA_ENTRY(za64rs, PRIV_VERSION_1_12_0, has_priv_1_12),
     ISA_EXT_DATA_ENTRY(zaamo, PRIV_VERSION_1_12_0, ext_zaamo),
@@ -1334,6 +1335,7 @@ const RISCVCPUMultiExtConfig riscv_cpu_extensions[] = {
     MULTI_EXT_CFG_BOOL("zicond", ext_zicond, false),
     MULTI_EXT_CFG_BOOL("zilx", ext_zilx, false),
     MULTI_EXT_CFG_BOOL("zisx", ext_zisx, false),
+    MULTI_EXT_CFG_BOOL("zilxib", ext_zilxib, false),
 
     /* Vector cryptography extensions */
     MULTI_EXT_CFG_BOOL("zvbb", ext_zvbb, false),

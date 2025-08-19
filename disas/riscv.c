@@ -1022,6 +1022,13 @@ typedef enum {
     rv_op_sxw_s_uw  = 991,
     rv_op_sxd_s     = 992,
     rv_op_sxd_s_uw  = 993,
+    rv_op_lbib      = 994,
+    rv_op_lbuib     = 995,
+    rv_op_lhib      = 996,
+    rv_op_lhuib     = 997,
+    rv_op_lwib      = 998,
+    rv_op_lwuib     = 999,
+    rv_op_ldib      = 1000,
 } rv_op;
 
 /* register names */
@@ -2330,6 +2337,13 @@ const rv_opcode_data rvi_opcode_data[] = {
     { "sxw_s_uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
     { "sxd_s", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
     { "sxd_s_uw", rv_codec_r, rv_fmt_rd_rs1_rs2, NULL, 0, 0, 0 },
+    { "lbib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lbuib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lhib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lhuib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lwib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "lwuib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "ldib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
 };
 
 /* CSR names */
@@ -2862,6 +2876,14 @@ static void decode_inst_opcode(rv_decode *dec, rv_isa isa)
             // case 7: op = rv_op_ldu; break;
             case 7:
                 switch ((inst >> 25) & 0b111) {
+                case 0b000:
+                    switch ((inst >> 30) & 0b11) {
+                        case 0b00: op = inst & (1 << 29) ? rv_op_lbuib : rv_op_lbib; break;
+                        case 0b01: op = inst & (1 << 29) ? rv_op_lhuib : rv_op_lhib; break;
+                        case 0b10: op = inst & (1 << 29) ? rv_op_lwuib : rv_op_lwib; break;
+                        case 0b11: op = rv_op_ldib; break;
+                    }
+                    break;
                 case 0b010:
                     switch ((inst >> 30) & 0b11) {
                         case 0b00: op = inst & (1 << 29) ? rv_op_lxbu : rv_op_lxb; break;
