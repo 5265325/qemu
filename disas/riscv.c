@@ -1029,6 +1029,10 @@ typedef enum {
     rv_op_lwib      = 998,
     rv_op_lwuib     = 999,
     rv_op_ldib      = 1000,
+    rv_op_sbib      = 1001,
+    rv_op_shib      = 1002,
+    rv_op_swib      = 1003,
+    rv_op_sdib      = 1004,
 } rv_op;
 
 /* register names */
@@ -2344,6 +2348,10 @@ const rv_opcode_data rvi_opcode_data[] = {
     { "lwib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
     { "lwuib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
     { "ldib", rv_codec_r2_imm5, rv_fmt_rd_rs1_imm, NULL, 0, 0, 0 },
+    { "sbib", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
+    { "shib", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
+    { "swib", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
+    { "sdib", rv_codec_r2_imm5_7, rv_fmt_rs1_rs2_offset, NULL, 0, 0, 0 },
 };
 
 /* CSR names */
@@ -3128,6 +3136,14 @@ static void decode_inst_opcode(rv_decode *dec, rv_isa isa)
             case 4: op = rv_op_sq; break;
             case 7:
                 switch ((inst >> 25) & 0b111) {
+                case 0b000:
+                    switch ((inst >> 30) & 0b11) {
+                        case 0b00: op = rv_op_sbib; break;
+                        case 0b01: op = rv_op_shib; break;
+                        case 0b10: op = rv_op_swib; break;
+                        case 0b11: op = rv_op_sdib; break;
+                    }
+                    break;
                 case 0b010:
                     switch ((inst >> 30) & 0b11) {
                         case 0b00: op = rv_op_sxb; break;
@@ -5111,6 +5127,12 @@ static void decode_inst_operands(rv_decode *dec, rv_isa isa)
         dec->rd = rv_ireg_zero;
         dec->rs1 = dec->rs2 = operand_crs1(inst);
         dec->imm = 0;
+        break;
+    case rv_codec_r2_imm5_7:
+        dec->rd = operand_rd(inst);
+        dec->rs1 = operand_rs1(inst);
+        dec->rs2 = operand_rs2(inst);
+        dec->imm = operand_rs2(inst);
         break;
     };
 }

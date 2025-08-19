@@ -168,6 +168,7 @@ typedef enum {
     rv_codec_fli,
     rv_codec_lp,
     rv_codec_cmop_ss,
+    rv_codec_r2_imm5_7,
 } rv_codec;
 
 /* structures */
